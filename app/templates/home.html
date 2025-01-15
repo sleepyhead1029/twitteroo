@@ -1,0 +1,8 @@
+{%extends "base.html" %} {% block title%}Home{% endblock %} {%block content%}
+<h1>Welcome to Twitteroo</h1>
+{%for tweet in tweet%}
+<div class="tweet">
+  <p><strong>{{ tweet.author.username }}</strong>: {{ tweet.content }}</p>
+  <small>{{ tweet.date_posted.strftime('%Y-%m-%d %H:%M') }}</small>
+</div>
+{% endfor %} {% endblock %}
