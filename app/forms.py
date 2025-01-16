@@ -11,15 +11,17 @@ class RegistrationForm(FlaskForm):
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('Password')])
     submit = SubmitField('Sign Up')
 
+    def validate_email(self, email):
+        try:
+            valid = validate_email(email.data)
+            email.data = valid.email
+        except EmailNotValidError as e:
+            raise ValidationError(str(e))
+        
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
         if user:
-            raise ValidationError("That username is taken. Please choose a different one")
-    try:    
-        emailInfo = validate_email(email, check_deliverability=False)
-    except EmailNotValidError:
-        raise ValidationError("The email is not valid!")
-
+            raise ValidationError('That username is taken. Please choose a different one.')
             
 
 class LoginForm(FlaskForm):

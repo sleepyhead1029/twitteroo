@@ -1,4 +1,4 @@
-from flask import Blueprint,render_template, url_for, flash, redirect
+from flask import Blueprint,render_template, url_for, flash, redirect,request, abort
 from flask_login import login_user, current_user, logout_user, login_required
 from app import db, bcrypt
 from app.models import User, Tweet
@@ -22,6 +22,7 @@ def register():
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+        print(user.username, user.email, user.password)
         db.session.add(user)
         db.session.commit()
         flash('Your account has been created!', 'success')
@@ -57,3 +58,31 @@ def new_tweet():
         flash('Your tweet has been created!', 'success')
         return redirect(url_for('routes.login'))
     return render_template('tweet.html', title='New Tweet', form=form)
+
+@routes.route("/update/<int:tweet_id>", methods=['GET','POST'])
+@login_required
+def update_tweet(tweet_id):
+    tweet = Tweet.query.get_or_404(tweet_id)
+    if tweet.author != current_user:
+        abort(403)
+    form = TweetForm()
+    if form.validate_on_submit():
+        tweet.content = form.content.data
+        db.session.commit()
+        flash('Your tweet has been updated!', 'success')
+        return redirect(url_for('routes.home'))
+    elif request.method == 'GET':
+        form.content.data = tweet.content
+    return render_template('tweet.html', title='Update Tweet', form=form)
+    
+
+
+@routes.route("/search", methods=['GET'])
+def search():
+    query = request.args.get('query','').strip()
+    if not query:
+        flash('Please enter a search term.', 'warning')
+        return redirect(url_for('routes.home'))
+    
+    results = Tweet.query.filter(Tweet.content.ilike(f"%{query}")).all()
+    return render_template('search_results.html', results=results, query=query)
