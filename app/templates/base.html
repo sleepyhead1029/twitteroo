@@ -11,13 +11,13 @@
   <body>
     <nav>
       <ul>
-        <li><a href="{{url_for('home')}}">Home</a></li>
+        <li><a href="{{url_for('routes.home')}}">Home</a></li>
         {% if current_user.is_authenticated %}
-        <li><a href="{{url_for('new_tweet')}}">New Tweet</a></li>
-        <li><a href="{{url_for('logout')}}">Logout</a></li>
+        <li><a href="{{url_for('routes.new_tweet')}}">New Tweet</a></li>
+        <li><a href="{{url_for('routes.logout')}}">Logout</a></li>
         {% else %}
-        <li><a href="{{url_for('login')}}">Login</a></li>
-        <li><a href="{{url_for('register')}}">Register</a></li>
+        <li><a href="{{url_for('routes.login')}}">Login</a></li>
+        <li><a href="{{url_for('routes.register')}}">Register</a></li>
         {% endif %}
       </ul>
     </nav>

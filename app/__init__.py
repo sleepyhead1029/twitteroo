@@ -23,10 +23,7 @@ def create_app():
     
     login_manager.login_view = 'login'
 
-    with app.app_context():
-        db.create_all()
-        from app import routes
-        from app import models
-        from app import forms
+    from app.routes import routes
+    app.register_blueprint(routes)
 
     return app
