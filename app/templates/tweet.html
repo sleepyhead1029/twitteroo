@@ -3,7 +3,7 @@ content%}
 <h2>New Tweet</h2>
 <form method="POST">
   {{ form.hidden_tag() }}
-  <p>{{ form.content.label }} {{ form.content(class"form-control") }}</p>
+  <p>{{ form.content.label }} {{ form.content(class="form-control") }}</p>
   <p>{{ form.submit(class="btn btn-primary")}}</p>
 </form>
 {% endblock%}
